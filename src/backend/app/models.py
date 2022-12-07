@@ -8,13 +8,13 @@ class User(db.Model):
     name = Column(String(100), nullable=False)
 
     # define a one-to-many relationship with the UserFriend model
-    friends = relationship('UserFriend', back_populates='user')
+    friends = relationship('Friend', back_populates='user')
 
-class UserFriend(db.Model):
-    __tablename__ = 'user_friends'
+class Friends(db.Model):
+    __tablename__ = 'friends'
 
-    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    friend_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
     # define a many-to-one relationship with the User model
     user = relationship('User', back_populates='friends')
@@ -23,6 +23,7 @@ class UserFriend(db.Model):
     name = Column(String(100), nullable=False)
     birthdate = Column(DateTime)
     last_messaged = Column(DateTime)
+    frequency = Column(Integer)
 
     def __repr__(self):
         return '<UserFriend user_id={} friend_id={}>'.format(self.user_id, self.friend_id)
