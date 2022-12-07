@@ -40,8 +40,12 @@ def get_user_from_data(data):
     return user
 
 def check_password(data):
-    # TODO(yousef): fill in.
-    return False
+    email = data['email']
+    print("HERE")
+    maybe_existing_user = db.session.query(User).filter(User.email == email).first()
+    if maybe_existing_user is None or data['password_digest'] != maybe_existing_user.password_digest:
+        return False
+    return True
 
 # Account Creation.
 @app.route('/create_account', methods=['POST'])
@@ -110,7 +114,7 @@ def update_friend():
 if __name__ == "__main__":
     app.run()
     db.create_all(app)
-    user = User(name="John", email="john@example.com")
+    user = User(name="John", email="john@example.com", password_digest = "temp")
     friend1 = Friend(name="Jane", user=user)
     friend2 = Friend(name="Mike", user=user)
     db.session.add(user)
