@@ -1,7 +1,14 @@
-import React from "react"
+import React from "react";
+import PastDue from "./PastDue";
+import Friends from "./Friends";
 
 function HomePage({ user }) {
-    return(<></>)
+    return(
+        <>
+            <PastDue/>
+            <Friends/>
+        </>
+    )
 }
 
-export default HomePage
+export default HomePage;
