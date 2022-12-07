@@ -1,62 +1,25 @@
-import React from 'react';
+import './App.css';
+import React, { useState, useEffect } from "react";
+import HomePage from './components/HomePage';
+import LandingPage from './components/LandingPage';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+function App() {
+  const [user, setUser] = useState({});
 
-    this.state = {
-      friends: [
-        { name: 'Alice' },
-        { name: 'Bob' },
-        { name: 'Carol' },
-        { name: 'Dave' },
-        { name: 'Emily' }
-      ],
-      newFriend: ''
-    };
-  }
-
-  handleRemindClick(friend) {
-    alert(`Reminder: Reach out to ${friend.name}`);
-  }
-
-  handleAddClick() {
-    this.setState(state => {
-      const friends = state.friends.concat({ name: state.newFriend });
-      return {
-        friends,
-        newFriend: ''
-      };
+  useEffect(() => {
+    // auto-login
+    fetch("/me").then((r) => {
+      if (r.ok) {
+        r.json().then((user) => setUser(user));
+      }
     });
-  }
+  }, []);
 
-  handleChange(event) {
-    this.setState({ newFriend: event.target.value });
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>My Friends</h1>
-        <ul>
-          {this.state.friends.map(friend => (
-            <li key={friend.name}>
-              {friend.name}
-              <button onClick={() => this.handleRemindClick(friend)}>
-                Remind
-              </button>
-            </li>
-          ))}
-        </ul>
-        <input
-          type="text"
-          value={this.state.newFriend}
-          onChange={event => this.handleChange(event)}
-        />
-        <button onClick={() => this.handleAddClick()}>Add Friend</button>
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      {!!Object.keys(user).length ? <HomePage user={user}/> : <LandingPage setUser={setUser} />}
+    </div>
+  );
 }
 
 export default App;
