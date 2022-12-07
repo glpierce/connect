@@ -1,9 +1,12 @@
 from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from models import User, Friend
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+db = SQLAlchemy(app)
 CORS(app)
-
 
 @app.route("/me")
 def me():
@@ -75,10 +78,13 @@ def update_friend():
     user = get_user_from_data(data)
     return {'status': 'SUCCESS', 'id': user.id, 'email': user.email, 'name': user.name}
 
-
-    pass
-
-
-
 if __name__ == "__main__":
     app.run()
+    db.create_all()
+    user = User(name="John", email="john@example.com")
+    friend1 = Friend(name="Jane", user=user)
+    friend2 = Friend(name="Mike", user=user)
+    db.session.add(user)
+    db.session.add(friend1)
+    db.session.add(friend2)
+    db.session.commit()
