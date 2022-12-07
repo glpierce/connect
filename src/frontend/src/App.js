@@ -11,12 +11,27 @@ class App extends React.Component {
         { name: 'Carol' },
         { name: 'Dave' },
         { name: 'Emily' }
-      ]
+      ],
+      newFriend: ''
     };
   }
 
   handleRemindClick(friend) {
     alert(`Reminder: Reach out to ${friend.name}`);
+  }
+
+  handleAddClick() {
+    this.setState(state => {
+      const friends = state.friends.concat({ name: state.newFriend });
+      return {
+        friends,
+        newFriend: ''
+      };
+    });
+  }
+
+  handleChange(event) {
+    this.setState({ newFriend: event.target.value });
   }
 
   render() {
@@ -33,6 +48,12 @@ class App extends React.Component {
             </li>
           ))}
         </ul>
+        <input
+          type="text"
+          value={this.state.newFriend}
+          onChange={event => this.handleChange(event)}
+        />
+        <button onClick={() => this.handleAddClick()}>Add Friend</button>
       </div>
     );
   }
