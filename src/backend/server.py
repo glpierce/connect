@@ -5,43 +5,77 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/")
-def hello():
-    return "Hello, World!"
-
-
 @app.route("/me")
 def me():
     # TODO(Yousef): implement
     pass
 
+def get_user_from_data(data):
+    user = {}
+    # TODO(yousef): fill in.
+    return user
+
+def check_password(data):
+    # TODO(yousef): fill in.
+    return True
+
 # Account Creation.
 @app.route('/create_account', methods=['POST'])
 def create_account():
-    pass
+    data = request.json
+
+    if data['email'] is in db
+        return {'status': 'FAILURE', 'error_message': 'User email already exists.'}
+
+    user = get_user_from_data(data)
+
+    return {'status': 'SUCCESS', 'id': user.id, 'email': user.email, 'name': user.name}
 
 @app.route('/login', methods=['POST'])
 def login():
-    pass
+    data = request.json
+
+    if not check_password(data):
+        return {'status': 'FAILURE', 'error_message': 'Username or password is incorrect.'}
+
+    user = get_user_from_data(data)
+    return {'status': 'SUCCESS', 'id': user.id, 'email': user.email, 'name': user.name}
+
 
 # Accessing/changing friend data.
 @app.route('/add_friend', methods=['POST'])
 def add_friend():
-    pass
+    data = request.json
+
+    return {'id': id, "name": "New Friend", "frequency": "Daily", "lastMessaged": 'temp', 'birthday': 'today'},
 
 @app.route("/get_friends")
 def get_friends():
+    id = 10
     data = [
-        {"name": "Yousef", "frequency": "Daily"},
-        {"name": "Grant", "frequency": "Monthly"},
-        {"name": "Miguel", "frequency": "Yearly"},
+        {'id': id, "name": "Yousef", "frequency": "Daily", "lastMessaged": 'temp', 'birthday': 'today'},
     ]
     print(data)
 
     return jsonify(data)
 
-@app.route('/update_last_messaged', methods=['POST'])
-def update_last_messaged():
+@app.route("/get_friends", methods=["POST"])
+def remove_friend():
+    data = request.json
+    # check if friend exists
+    return {'id': id}
+
+@app.route('/update_friend', methods=['POST'])
+def update_friend():
+    data = request.json
+
+    if not check_password(data):
+        return {'status': 'FAILURE', 'error_message': 'Username or password is incorrect.'}
+
+    user = get_user_from_data(data)
+    return {'status': 'SUCCESS', 'id': user.id, 'email': user.email, 'name': user.name}
+
+
     pass
 
 
