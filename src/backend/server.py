@@ -16,11 +16,11 @@ def me():
     pass
 
 # Account Creation.
-@app.route('/create_account', methods=['POST']))
+@app.route('/create_account', methods=['POST'])
 def create_account():
     pass
 
-@app.route('/login', methods=['POST']))
+@app.route('/login', methods=['POST'])
 def login():
     pass
 
@@ -40,7 +40,7 @@ def get_friends():
 
     return jsonify(data)
 
-@app.route('/update_last_messaged', methods=['POST']))
+@app.route('/update_last_messaged', methods=['POST'])
 def update_last_messaged():
     pass
 
