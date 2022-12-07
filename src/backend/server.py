@@ -2,10 +2,13 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import User, Friend
+from __init__ import db
+
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-db = SQLAlchemy(app)
+
+db.init_app(app)
 CORS(app)
 
 @app.route("/me")
@@ -27,8 +30,8 @@ def check_password(data):
 def create_account():
     data = request.json
 
-    if data['email'] is in db
-        return {'status': 'FAILURE', 'error_message': 'User email already exists.'}
+    # if data['email'] is in db
+    #     return {'status': 'FAILURE', 'error_message': 'User email already exists.'}
 
     user = get_user_from_data(data)
 
