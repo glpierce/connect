@@ -1,11 +1,28 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import User, Friend
+from __init__ import db
+
+from sqlalchemy import create_engine
+from sqlalchemy import engine
+
+
+engine_1 = create_engine('sqlite:///mydatabase.db')
+inspector = engine.Inspector(engine_1)
+
+table_names = inspector.get_table_names()
+
+if 'users' in table_names:
+    print('The users table exists')
+else:
+    print('The users table does not exist')
+
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-db = SQLAlchemy(app)
+
+db.init_app(app)
 CORS(app)
 
 @app.route("/me")
@@ -16,21 +33,31 @@ def me():
 def get_user_from_data(data):
     user = {}
     # TODO(yousef): fill in.
+    first_name = data['first_name']
+    last_name = data['last_name']
+    password_digest = data['password_digest']
+    user = User(name=f'{first_name} {last_name}', email=data['email'], password_digest=password_digest)
     return user
 
 def check_password(data):
     # TODO(yousef): fill in.
-    return True
+    return False
 
 # Account Creation.
 @app.route('/create_account', methods=['POST'])
 def create_account():
     data = request.json
 
-    if data['email'] is in db
+    email = data['email']
+    # maybe_existing_user = User.query.filter_by(email = email).first()
+    maybe_existing_user = db.session.query(User).filter(User.email == email).first()
+    if maybe_existing_user is not None:
         return {'status': 'FAILURE', 'error_message': 'User email already exists.'}
 
     user = get_user_from_data(data)
+
+    db.session.add(user)
+    db.session.commit()
 
     return {'status': 'SUCCESS', 'id': user.id, 'email': user.email, 'name': user.name}
 
@@ -49,6 +76,8 @@ def login():
 @app.route('/add_friend', methods=['POST'])
 def add_friend():
     data = request.json
+
+    maybe_new_friend = Friend(name=data['name'], user=data['user'])
 
     return {'id': id, "name": "New Friend", "frequency": "Daily", "lastMessaged": 'temp', 'birthday': 'today'},
 
@@ -80,7 +109,7 @@ def update_friend():
 
 if __name__ == "__main__":
     app.run()
-    db.create_all()
+    db.create_all(app)
     user = User(name="John", email="john@example.com")
     friend1 = Friend(name="Jane", user=user)
     friend2 = Friend(name="Mike", user=user)
