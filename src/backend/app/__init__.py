@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 # create an instance of SQLAlchemy
 db = SQLAlchemy()
 
+
 def create_app():
     app = Flask(__name__)
 
@@ -12,6 +13,7 @@ def create_app():
 
     # import and register blueprints
     from app.routes import main
+
     app.register_blueprint(main)
 
     return app
