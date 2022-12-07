@@ -13,7 +13,8 @@ class User(Base):
     email = Column(String)
 
     # define a one-to-many relationship with the UserFriend model
-    friends = relationship('Friend', back_populates='user')
+    friends = relationship("Friend", back_populates="user")
+
 
 class Friend(Base):
     __tablename__ = 'friends'
@@ -22,7 +23,7 @@ class Friend(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     # define a many-to-one relationship with the User model
-    user = relationship('User', back_populates='friends')
+    user = relationship("User", back_populates="friends")
 
     # add new fields
     name = Column(String(100), nullable=False)
@@ -31,4 +32,6 @@ class Friend(Base):
     frequency = Column(Integer)
 
     def __repr__(self):
-        return '<UserFriend user_id={} friend_id={}>'.format(self.user_id, self.friend_id)
+        return "<UserFriend user_id={} friend_id={}>".format(
+            self.user_id, self.friend_id
+        )
