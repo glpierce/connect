@@ -10,6 +10,7 @@ class User(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     email = Column(String)
+    password_digest = Column(String)
 
     # define a one-to-many relationship with the UserFriend model
     friends = relationship("Friend", back_populates="user")

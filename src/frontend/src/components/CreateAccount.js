@@ -26,7 +26,7 @@ function CreateAccount({ setUser }) {
                 password: password,
               }),
             };
-            fetch("/create_account", payload)
+            fetch("http://localhost:5000/create_account", payload)
             .then((r) => {
               if (r.ok) {
                   r.json().then((userResp) => setUser(userResp));
