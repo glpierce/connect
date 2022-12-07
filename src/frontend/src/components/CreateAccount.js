@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { FormControl, TextField, Button } from '@mui/material';
 import Box from '@mui/material/Box';
 
@@ -25,8 +25,8 @@ function CreateAccount({ setUser }) {
                 email: email,
                 password: password,
               }),
-            }
-            fetch("/users", payload)
+            };
+            fetch("/create_account", payload)
             .then((r) => {
               if (r.ok) {
                   r.json().then((userResp) => setUser(userResp));
@@ -35,14 +35,14 @@ function CreateAccount({ setUser }) {
               }
             });
           } else {
-            resetPasswordFields()
-            setPasswordMatch(false)
+            resetPasswordFields();
+            setPasswordMatch(false);
           }
     }
 
     function resetPasswordFields() {
-        setPassword("")
-        setPasswordConfirmation("")
+        setPassword("");
+        setPasswordConfirmation("");
     }
 
 
@@ -99,7 +99,7 @@ function CreateAccount({ setUser }) {
             </FormControl>
             </Box>
         </div>
-      )
+      );
 }
 
-export default CreateAccount
+export default CreateAccount;

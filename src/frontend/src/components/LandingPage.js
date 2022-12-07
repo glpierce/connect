@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import Login from "./Login"
-import CreateAccount from "./CreateAccount"
+import React, { useState } from "react";
+import Login from "./Login";
+import CreateAccount from "./CreateAccount";
 
 function LandingPage({ setUser }) {
-    const [createAccount, setCreateAccount] = useState(false)
+    const [createAccount, setCreateAccount] = useState(false);
 
     function toggleForm() {
-        setCreateAccount(!createAccount)
+        setCreateAccount(!createAccount);
     }
 
     return(

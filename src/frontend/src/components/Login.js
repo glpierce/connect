@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
@@ -20,19 +20,19 @@ function Login({ setUser }) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ email: email, password: password })
-        }
+        };
         fetch("/login", postObj)
         .then((r) => {
-            setIsLoading(false)
+            setIsLoading(false);
             if (r.ok) {
                 r.json().then((userResp) => setUser(userResp));
             } else {
                 r.json().then((err) => {
-                    setErrors(err.errors)
-                    setEmail("")
-                    setPassword("")
+                    setErrors(err.errors);
+                    setEmail("");
+                    setPassword("");
                 });
-            }
+            };
         });
     }
 
