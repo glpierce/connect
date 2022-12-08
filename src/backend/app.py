@@ -32,7 +32,7 @@ def get_user_from_data(data):
         last_name=last_name,
         email=email,
         password_digest=password_digest,
-    )  # TODO: pls fix syntax, thx
+    )
     return user
 
 
@@ -112,19 +112,16 @@ def add_friend():
     )
 
 
-@app.route("/get_friends")
-def get_friends():
-    id = 10
-    data = [
-        {
-            "id": id,
-            "name": "Yousef",
-            "frequency": "Daily",
-            "lastMessaged": "temp",
-            "birthday": "today",
-        },
-    ] * 2
-    return jsonify(data)
+@app.route("/get_friends/<int:user_id>")
+def get_friends(user_id):
+    maybe_user = db.session.query(User).filter_by(id=user_id).first()
+    if maybe_user is None:
+        return {
+            "status": "FAILURE",
+            "error_message": "Invalid user id.",
+        }
+
+    return jsonify(maybe_user.friends)
 
 
 @app.route("/get_friends", methods=["POST"])
@@ -152,7 +149,7 @@ if __name__ == "__main__":
     app.run()
     db.init_app(app)
     db.create_all()
-    user = User(name="John", email="john@example.com", password_digest="temp")
+    user = User(first_name="John", email="john@example.com", password_digest="temp")
     friend1 = Friend(name="Jane", user=user)
     friend2 = Friend(name="Mike", user=user)
     db.session.add(user)
