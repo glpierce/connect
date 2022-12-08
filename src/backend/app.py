@@ -1,7 +1,7 @@
-from models import Base, User, Friend
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from models import Base, User, Friend
 from __init__ import db
 
 from sqlalchemy import create_engine
@@ -150,7 +150,6 @@ def update_friend():
 
 if __name__ == "__main__":
     app.run()
-    with app.context()
     db.create_all()
     user = User(name="John", email="john@example.com", password_digest="temp")
     friend1 = Friend(name="Jane", user=user)
