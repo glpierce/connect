@@ -35,22 +35,15 @@ def get_user_from_data(data):
     return user
 
 
-def check_password(data):
+def check_password_and_get_user(data):
     email = data["email"]
-    print("HERE2")
-    import pdb; pdb.set_trace()
     maybe_existing_user = db.session.query(User).filter_by(email=email).first()
-    print(maybe_existing_user)
     if (
         maybe_existing_user is None
         or data["password_digest"] != maybe_existing_user.password_digest
     ):
-        return False
-    return True
-
-
-# def login_user(email, password_digest):
-#     maybe_existing_user = db.session.query(User).filter(User.email == email && User.password_digest == password_digest).first()
+        return None
+    return maybe_existing_user
 
 
 # Account Creation.
@@ -77,18 +70,17 @@ def login():
     data = request.json
 
     email = data.get("email")
-    # password_digest = data.get('password_digest')
+    password_digest = data.get("password_digest")
 
-    # if email is None or password_digest is None:
-    #     return {'status': 'FAILURE', 'error_message': 'Invalid form data.'}
+    if email is None or password_digest is None:
+        return {"status": "FAILURE", "error_message": "Invalid form data."}
 
-    print("HERE")
-    if not check_password(data):
+    maybe_user = check_password_and_get_user(data)
+    if maybe_user is None
         return {
             "status": "FAILURE",
             "error_message": "Username or password is incorrect.",
         }
-    user = login_user(data)
     return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.name}
 
 
@@ -122,8 +114,6 @@ def get_friends():
             "birthday": "today",
         },
     ]
-    print(data)
-
     return jsonify(data)
 
 
@@ -150,6 +140,7 @@ def update_friend():
 
 if __name__ == "__main__":
     app.run()
+    db.init_app(app)
     db.create_all()
     user = User(name="John", email="john@example.com", password_digest="temp")
     friend1 = Friend(name="Jane", user=user)
