@@ -4,10 +4,10 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 const ariaLabel = { 'aria-label': 'description' };
 
-function Login({ setUser }) {
+function Login({ setUser, hash }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState("");
+    const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     
 
@@ -19,21 +19,21 @@ function Login({ setUser }) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: email, password: password })
+            body: JSON.stringify({ email: email, password_digest: hash(password) })
         };
         fetch("http://localhost:5000/login", postObj)
         .then((r) => {
             setIsLoading(false);
             console.log(r);
-            // if (r.ok) {
-            //     r.json().then((userResp) => setUser(userResp));
-            // } else {
-            //     r.json().then((err) => {
-            //         setErrors(err.errors);
-            //         setEmail("");
-            //         setPassword("");
-            //     });
-            // };
+            if (r.ok) {
+                r.json().then((userResp) => setUser(userResp));
+            } else {
+                r.json().then((err) => {
+                    setError(err.error_message);
+                    setEmail("");
+                    setPassword("");
+                });
+            };
         });
     }
 
@@ -70,7 +70,7 @@ function Login({ setUser }) {
                         {isLoading ? "Loading..." : "Login"}
                     </Button>
                     <div>
-                        {!!errors ? <p>{errors}</p> : <></>}
+                        {!!error ? <p>{error}</p> : <></>}
                     </div>
                 </Box>
             </form>

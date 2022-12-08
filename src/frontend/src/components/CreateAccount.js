@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FormControl, TextField, Button } from '@mui/material';
 import Box from '@mui/material/Box';
 
-function CreateAccount({ setUser }) {
+function CreateAccount({ setUser, hash }) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ function CreateAccount({ setUser }) {
                 first_name: firstName,
                 last_name: lastName,
                 email: email,
-                password: password,
+                password_digest: hash(password),
               }),
             };
             fetch("http://localhost:5000/create_account", payload)
