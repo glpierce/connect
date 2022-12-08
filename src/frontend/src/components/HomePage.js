@@ -11,7 +11,7 @@ function HomePage({ user }) {
     }, [])
 
     function getFriends() {
-        fetch('http://localhost:5000/get_friends')
+        fetch(`http://localhost:5000/get_friends/${user.id}`)
         .then(r => r.json())
         .then(data => {
             console.log(data);
