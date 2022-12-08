@@ -1,6 +1,7 @@
 import unittest
 from models import User, Friend
 
+
 class TestModels(unittest.TestCase):
     def test_user(self):
         user = User(first_name="g", last_name="p", email="g@p.com")
@@ -17,6 +18,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(friend.name, "susie brubaker cole")
         self.assertEqual(friend.user, user)
         self.assertEqual(user.friends, [friend])
+
 
 if __name__ == "__main__":
     unittest.main()

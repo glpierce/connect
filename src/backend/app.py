@@ -62,7 +62,12 @@ def create_account():
     db.session.add(user)
     db.session.commit()
 
-    return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.first_name}
+    return {
+        "status": "SUCCESS",
+        "id": user.id,
+        "email": user.email,
+        "name": user.first_name,
+    }
 
 
 @app.route("/login", methods=["POST"])
@@ -81,7 +86,12 @@ def login():
             "status": "FAILURE",
             "error_message": "Username or password is incorrect.",
         }, 401
-    return {"status": "SUCCESS", "id": maybe_user.id, "email": maybe_user.email, "name": maybe_user.first_name}, 200
+    return {
+        "status": "SUCCESS",
+        "id": maybe_user.id,
+        "email": maybe_user.email,
+        "name": maybe_user.first_name,
+    }, 200
 
 
 # Accessing/changing friend data.
@@ -113,7 +123,7 @@ def get_friends():
             "lastMessaged": "temp",
             "birthday": "today",
         },
-    ]
+    ] * 2
     return jsonify(data)
 
 

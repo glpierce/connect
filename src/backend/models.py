@@ -5,8 +5,9 @@ from __init__ import db
 
 Base = declarative_base()
 
+
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
     first_name = Column(String(100), nullable=False)
@@ -19,7 +20,7 @@ class User(db.Model):
 
 
 class Friend(db.Model):
-    __tablename__ = 'friends'
+    __tablename__ = "friends"
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
