@@ -3,9 +3,10 @@ from models import User, Friend
 
 class TestModels(unittest.TestCase):
     def test_user(self):
-        user = User(name="gp", email="g@p.com")
+        user = User(first_name="g", last_name="p", email="g@p.com")
 
-        self.assertEqual(user.name, "gp")
+        self.assertEqual(user.first_name, "g")
+        self.assertEqual(user.last_name, "p")
         self.assertEqual(user.email, "g@p.com")
         self.assertEqual(user.friends, [])
 

@@ -5,7 +5,7 @@ function Friends({ user, friends }) {
 
     function generateFriendCards() {
         const cards = friends.map(friend => {
-            return(<FriendCard friend={friend} />);
+            return(<FriendCard key={friend.id} friend={friend} />);
         });
         return(cards);
     }
