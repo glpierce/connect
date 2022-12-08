@@ -26,10 +26,11 @@ def get_user_from_data(data):
     first_name = data["first_name"]
     last_name = data["last_name"]
     password_digest = data["password_digest"]
+    email = data["email"]
     user = User(
-        first_name=["first_name"],
-        last_name=["last_name"],
-        email=data["email"],
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
         password_digest=password_digest,
     )  # TODO: pls fix syntax, thx
     return user
@@ -52,7 +53,6 @@ def create_account():
     data = request.json
 
     email = data["email"]
-    # maybe_existing_user = User.query.filter_by(email = email).first()
     maybe_existing_user = db.session.query(User).filter(User.email == email).first()
     if maybe_existing_user is not None:
         return {"status": "FAILURE", "error_message": "User email already exists."}
@@ -62,7 +62,7 @@ def create_account():
     db.session.add(user)
     db.session.commit()
 
-    return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.name}
+    return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.first_name}
 
 
 @app.route("/login", methods=["POST"])
@@ -73,15 +73,15 @@ def login():
     password_digest = data.get("password_digest")
 
     if email is None or password_digest is None:
-        return {"status": "FAILURE", "error_message": "Invalid form data."}
+        return {"status": "FAILURE", "error_message": "Invalid form data."}, 401
 
     maybe_user = check_password_and_get_user(data)
-    if maybe_user is None
+    if maybe_user is None:
         return {
             "status": "FAILURE",
             "error_message": "Username or password is incorrect.",
-        }
-    return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.name}
+        }, 401
+    return {"status": "SUCCESS", "id": maybe_user.id, "email": maybe_user.email, "name": maybe_user.first_name}, 200
 
 
 # Accessing/changing friend data.
