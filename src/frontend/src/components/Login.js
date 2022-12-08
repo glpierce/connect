@@ -25,15 +25,15 @@ function Login({ setUser }) {
         .then((r) => {
             setIsLoading(false);
             console.log(r);
-            if (r.ok) {
-                r.json().then((userResp) => setUser(userResp));
-            } else {
-                r.json().then((err) => {
-                    setErrors(err.errors);
-                    setEmail("");
-                    setPassword("");
-                });
-            };
+            // if (r.ok) {
+            //     r.json().then((userResp) => setUser(userResp));
+            // } else {
+            //     r.json().then((err) => {
+            //         setErrors(err.errors);
+            //         setEmail("");
+            //         setPassword("");
+            //     });
+            // };
         });
     }
 

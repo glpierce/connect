@@ -8,7 +8,8 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=False)
     email = Column(String)
     password_digest = Column(String)
 

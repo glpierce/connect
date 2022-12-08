@@ -10,7 +10,8 @@ function FriendCard({ friend }) {
             <CardContent>
                 <h2>{friend.name}</h2>
                 <p>Birthday: {friend.birthday}</p>
-                <p>Last Messaged: {friend.last_messaged}</p>
+                <p>Last Messaged: {friend.lastMessaged}</p>
+                <p>Frequency: {friend.frequency}</p>
             </CardContent>
         </Card>
     )
