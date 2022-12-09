@@ -10,6 +10,7 @@ function PastDue({ user, pdFriends }) {
     }
     return( 
         <div>
+            <h2>Past Due</h2>
             {generateFriendCards()}
         </div>
     );

@@ -22,7 +22,7 @@ function HomePage({ user }) {
 
     function findPDFriends() {
         const pd = friends.filter(friend => {
-            //
+            // TODO(grant): get date diff and determine if past due
         });
         setPDFriends(pd);
     }

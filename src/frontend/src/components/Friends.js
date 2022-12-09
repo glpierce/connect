@@ -12,6 +12,7 @@ function Friends({ user, friends }) {
 
     return(
         <div>
+            <h2>Friends</h2>
             {generateFriendCards()}
         </div>
     );
