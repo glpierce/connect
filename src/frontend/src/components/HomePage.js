@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
+import FriendsHeader from "./FriendsHeader";
 import FriendsDisplay from "./FriendsDisplay";
-import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
-import CancelIcon from '@mui/icons-material/Cancel';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Button from "@mui/material/Button";
+import AddOverlay from "./AddOverlay";
 
 function HomePage({ user, windowDimensions }) {
     const [friends, setFriends] = useState([
@@ -77,6 +73,7 @@ function HomePage({ user, windowDimensions }) {
     const [pdFriends, setPDFriends] = useState([]);
     const [displayFriends, setDisplayFriends] = useState(friends)
     const [searchQuery, setSearchQuery] = useState("")
+    const [addToggle, setAddToggle] = useState(false);
 
     // useEffect(() => {
     //     getFriends();
@@ -103,7 +100,7 @@ function HomePage({ user, windowDimensions }) {
 
     function findPDFriends() {
         const pd = friends.filter(friend => {
-            // TODO(grant): get date diff and determine if past due
+            // TODO(grant): get date diff and determine if past due or do on backend
         });
         setPDFriends(pd);
     }
@@ -122,38 +119,7 @@ function HomePage({ user, windowDimensions }) {
                 }
             </div>
             <div>
-                <div className="friendsHeader">
-                    <div style={{display: "flex", flex: 1, justifyContent: "flex-start"}}>
-                        <h1 className="friendsHeaderLabel">Friends</h1>
-                    </div>
-                    <div style={{display: "flex", flex: 1, justifyContent: "center"}}>
-                        <TextField 
-                            id="friendSearch" 
-                            label="" 
-                            variant="standard"
-                            value={searchQuery}
-                            style={{width: 300, marginRight: 30, marginLeft: 30}}
-                            InputProps={{
-                                startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>),
-                                endAdornment: (
-                                    searchQuery ?
-                                    <InputAdornment position="end"><CancelIcon style={{cursor: "pointer"}} onClick={(e => setSearchQuery(""))}/></InputAdornment> :
-                                    <></>
-                                )
-                            }}
-                            onChange={e => setSearchQuery(e.target.value)} 
-                        />
-                    </div>
-                    <div style={{display: "flex", flex: 1, justifyContent: "flex-end"}}>
-                        <Button 
-                            variant="contained" 
-                            style={{height: 30, marginRight: 20}} 
-                            startIcon={<AddIcon/>}
-                        >
-                            New Friend
-                        </Button>
-                    </div>
-                </div>
+                <FriendsHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} setAddToggle={setAddToggle} />
                 <div className="sectionDivider"></div>
                 {
                     friends.length ?
@@ -163,6 +129,7 @@ function HomePage({ user, windowDimensions }) {
                     </div>
                 }
             </div>
+            <AddOverlay addToggle={addToggle} setAddToggle={setAddToggle} />
         </>
     );
 }
