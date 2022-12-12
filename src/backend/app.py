@@ -90,7 +90,8 @@ def login():
         "status": "SUCCESS",
         "id": maybe_user.id,
         "email": maybe_user.email,
-        "name": maybe_user.first_name,
+        "first_name": maybe_user.first_name,
+        "last_name": maybe_user.last_name,
     }, 200
 
 

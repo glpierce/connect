@@ -1,18 +1,61 @@
 import React, { useState } from "react";
 import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+
 
 function FriendCard({ friend }) {
     const [hoverObj, setHoverObj] = useState(null);
 
+    function getFormattedDate(date) {
+        const year = date.getFullYear().toString();
+        const month = (1 + date.getMonth()).toString();
+        const day = date.getDate().toString();
+        return(month + '/' + day + '/' + year);
+      }
+
+    function getFrequencyLabel(freq) {
+        switch(freq) {
+            case 365:
+                return("Yearly");
+            case 182:
+                return("Biannually");
+            case 91:
+                return("Quarterly");
+            case 30:
+                return("Monthly");
+            case 14:
+                return("Bimonthly");
+            case 7:
+                return("Weekly");
+            default:
+                return(`Every ${freq} days`)
+        }
+    }
+
     return(
-        <Card variant="outlined" style={{backgroundColor: "#34425A", width: "500px", cursor: "pointer"}} className="projectCard" onMouseEnter={e => setHoverObj(friend.id)} onMouseLeave={e => setHoverObj(null)}>
-            <CardContent>
-                <h2>{friend.name}</h2>
-                <p>Birthday: {friend.birthday}</p>
-                <p>Last Messaged: {friend.lastMessaged}</p>
-                <p>Frequency: {friend.frequency}</p>
+        <Card variant="outlined" style={{width: 225, height: 165, color: "white", backgroundColor: "#34425A", margin: 8}} onMouseEnter={e => setHoverObj(friend.id)} onMouseLeave={e => setHoverObj(null)}>
+            <h2 className="friendName">{friend.name}</h2>
+            <div className="cardDivider"/>
+            <CardContent style={{paddingTop: 6}}>
+                <div className="friendDataContainer">
+                    <div className="dataLabelsContainer">
+                        <p>Birthday:</p>
+                        <p>Last Contact:</p>
+                        <p>Frequency:</p>
+                    </div>
+                    <div className="dataValuesContainer">
+                        <p>{friend.birthdate}</p>
+                        <p>{getFormattedDate(friend.last_messaged)}</p>
+                        <p>{getFrequencyLabel(friend.frequency)}</p>
+                    </div>
+                </div>
             </CardContent>
+            <div className="cardButtonContainer">
+                <Button variant="contained">Connected!</Button>
+                <Button variant="contained">Edit</Button>
+            </div>
         </Card>
     )
 }
