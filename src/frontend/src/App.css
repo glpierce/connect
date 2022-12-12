@@ -40,12 +40,19 @@
 
 .pastDueHeader {
   font-weight: bold;
-  margin-left: 100px;
+  margin-left: 20px;
 }
 
 .friendsHeader {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.friendsHeaderLabel {
   font-weight: bold;
-  margin-left: 100px;
+  margin-left: 20px;
+  justify-self: flex-start;
 }
 
 .sectionDivider {
@@ -70,6 +77,17 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.placeholderCard {
+  width: 227px;
+  height: 180px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .friendName {

@@ -30,7 +30,7 @@ class Friend(db.Model):
 
     # add new fields
     name = Column(String(100), nullable=False)
-    birthdate = Column(DateTime)
+    birthdate = Column(DateTime) 
     last_messaged = Column(DateTime)
     frequency = Column(Integer)
 

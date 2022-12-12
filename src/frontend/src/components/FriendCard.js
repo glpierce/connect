@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 
@@ -35,7 +34,12 @@ function FriendCard({ friend }) {
     }
 
     return(
-        <Card variant="outlined" style={{width: 225, height: 165, color: "white", backgroundColor: "#34425A", margin: 8}} onMouseEnter={e => setHoverObj(friend.id)} onMouseLeave={e => setHoverObj(null)}>
+        <Card 
+            variant="outlined" 
+            style={{width: 225, height: 165, color: "white", backgroundColor: "#34425A", marginTop: 10, marginBottom: 10}} 
+            onMouseEnter={e => setHoverObj(friend.id)} 
+            onMouseLeave={e => setHoverObj(null)}
+        >
             <h2 className="friendName">{friend.name}</h2>
             <div className="cardDivider"/>
             <CardContent style={{paddingTop: 6}}>
