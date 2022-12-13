@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
+# this file initializes the core app, the plugins and then kickstarts all other processes need to setup our app
+
 def init_app():
     # core app inits
     app = Flask(__name__, )

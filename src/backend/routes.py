@@ -4,6 +4,9 @@ from flask import jsonify, request
 from .models import User, Friend, db
 
 
+# hello! only routes (and their helpers) should live here!
+# nothing else
+
 @app.route("/me")
 def me():
     # TODO(Yousef): implement
@@ -26,7 +29,7 @@ def get_user_from_data(data):
     return user
 
 
-def check_password_and_get_user(data):
+def _check_password_and_get_user(data):
     email = data["email"]
     maybe_existing_user = db.session.query(User).filter_by(email=email).first()
     if (
@@ -71,7 +74,7 @@ def login():
     if email is None or password_digest is None:
         return {"status": "FAILURE", "error_message": "Invalid form data."}, 401
 
-    maybe_user = check_password_and_get_user(data)
+    maybe_user = _check_password_and_get_user(data)
     if maybe_user is None:
         return {
             "status": "FAILURE",

@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from . import db
 
+
+# the place where all of our models schemas reside
+
 class User(db.Model):
     __tablename__ = "users"
 
