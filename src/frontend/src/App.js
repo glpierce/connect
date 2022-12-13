@@ -8,13 +8,7 @@ import Account from './components/Account';
 
 function App() {
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-  const [user, setUser] = useState({
-    status: "SUCCESS",
-    id: "1",
-    email: "grant@email.com",
-    first_name: "Grant",
-    last_name: "Pierce"
-});
+  const [user, setUser] = useState({});
 
 useEffect(() => {
   function handleResize() {
@@ -51,3 +45,14 @@ function getWindowDimensions() {
 }
 
 export default App;
+
+
+
+
+// {
+//   status: "SUCCESS",
+//   id: "1",
+//   email: "grant@email.com",
+//   first_name: "Grant",
+//   last_name: "Pierce"
+// }

@@ -9,6 +9,12 @@
   flex-direction: row;
 }
 
+.landingPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .menuContainer {
   flex-grow: 1;
   flex-basis: 33%;

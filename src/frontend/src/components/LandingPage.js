@@ -15,9 +15,9 @@ function LandingPage({ setUser }) {
     }
 
     return(
-        <div style={{marginTop: !!createAccount ? "40px" : "100px"}}>
+        <div className="landingPage" style={{marginTop: !!createAccount ? "40px" : "100px"}}>
             {!!createAccount ? <CreateAccount setUser={setUser} hash={hash} /> : <Login setUser={setUser} hash={hash} />}
-            <p onClick={toggleForm}>{!!createAccount ? "Already have an account? Sign in!" : "Don't have an account? Sign up!"}</p>
+            <p onClick={toggleForm} style={{cursor: "pointer", marginTop: (!!createAccount ? 30 : 20)}}>{!!createAccount ? "Already have an account? Sign in!" : "Don't have an account? Sign up!"}</p>
         </div>
     )
 }
