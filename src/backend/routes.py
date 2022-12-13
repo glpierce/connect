@@ -1,17 +1,7 @@
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from .models import Base, User, Friend
-from __init__ import db
+from flask import current_app as app
+from flask import jsonify, request
 
-from sqlalchemy import create_engine
-from sqlalchemy import engine
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-
-db.init_app(app)
-CORS(app)
+from .models import User, Friend, db
 
 
 @app.route("/me")
@@ -66,8 +56,7 @@ def create_account():
         "status": "SUCCESS",
         "id": user.id,
         "email": user.email,
-        "first_name": user.first_name,
-        "last_name": user.last_name
+        "name": user.first_name,
     }
 
 
@@ -91,8 +80,7 @@ def login():
         "status": "SUCCESS",
         "id": maybe_user.id,
         "email": maybe_user.email,
-        "first_name": maybe_user.first_name,
-        "last_name": maybe_user.last_name,
+        "name": maybe_user.first_name,
     }, 200
 
 
@@ -123,7 +111,7 @@ def get_friends(user_id):
             "error_message": "Invalid user id.",
         }
 
-    return jsonify(maybe_user.friends.order_by(Friend.name))
+    return jsonify(maybe_user.friends)
 
 
 @app.route("/get_friends", methods=["POST"])
@@ -145,16 +133,3 @@ def update_friend():
 
     user = get_user_from_data(data)
     return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.name}
-
-
-if __name__ == "__main__":
-    app.run()
-    db.init_app(app)
-    db.create_all()
-    user = User(first_name="John", email="john@example.com", password_digest="temp")
-    friend1 = Friend(name="Jane", user=user)
-    friend2 = Friend(name="Mike", user=user)
-    db.session.add(user)
-    db.session.add(friend1)
-    db.session.add(friend2)
-    db.session.commit()
