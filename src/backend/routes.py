@@ -56,7 +56,8 @@ def create_account():
         "status": "SUCCESS",
         "id": user.id,
         "email": user.email,
-        "name": user.first_name,
+        "first_name": user.first_name,
+        "last_name": user.last_name
     }
 
 
@@ -80,7 +81,8 @@ def login():
         "status": "SUCCESS",
         "id": maybe_user.id,
         "email": maybe_user.email,
-        "name": maybe_user.first_name,
+        "first_name": maybe_user.first_name,
+        "last_name": maybe_user.last_name,
     }, 200
 
 
@@ -111,7 +113,7 @@ def get_friends(user_id):
             "error_message": "Invalid user id.",
         }
 
-    return jsonify(maybe_user.friends)
+    return jsonify(maybe_user.friends.order_by(Friend.name))
 
 
 @app.route("/get_friends", methods=["POST"])
