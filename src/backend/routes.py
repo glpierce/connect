@@ -1,18 +1,11 @@
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from models import Base, User, Friend
-from __init__ import db
+from flask import current_app as app
+from flask import jsonify, request
 
-from sqlalchemy import create_engine
-from sqlalchemy import engine
+from .models import User, Friend, db
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 
-db.init_app(app)
-CORS(app)
-
+# hello! only routes (and their helpers) should live here!
+# nothing else
 
 @app.route("/me")
 def me():
@@ -36,7 +29,7 @@ def get_user_from_data(data):
     return user
 
 
-def check_password_and_get_user(data):
+def _check_password_and_get_user(data):
     email = data["email"]
     maybe_existing_user = db.session.query(User).filter_by(email=email).first()
     if (
@@ -81,7 +74,7 @@ def login():
     if email is None or password_digest is None:
         return {"status": "FAILURE", "error_message": "Invalid form data."}, 401
 
-    maybe_user = check_password_and_get_user(data)
+    maybe_user = _check_password_and_get_user(data)
     if maybe_user is None:
         return {
             "status": "FAILURE",
@@ -145,16 +138,3 @@ def update_friend():
 
     user = get_user_from_data(data)
     return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.name}
-
-
-if __name__ == "__main__":
-    app.run()
-    db.init_app(app)
-    db.create_all()
-    user = User(first_name="John", email="john@example.com", password_digest="temp")
-    friend1 = Friend(name="Jane", user=user)
-    friend2 = Friend(name="Mike", user=user)
-    db.session.add(user)
-    db.session.add(friend1)
-    db.session.add(friend2)
-    db.session.commit()
