@@ -14,7 +14,7 @@ def init_app():
 
     # plugin init
     db.init_app(app)
-    CORS(app)
+    # CORS(app)
 
     with app.app_context():
 
