@@ -15,7 +15,7 @@ function HomePage({ user, windowDimensions }) {
     }, [])
 
     function getFriends() {
-        fetch(`/get_friends/${user.id}`)
+        fetch(`http://localhost:4000/get_friends/${user.id}`)
         .then(r => r.json())
         .then(data => {
             console.log(data);

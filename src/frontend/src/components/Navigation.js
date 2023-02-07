@@ -67,7 +67,7 @@ function Navigation({ user, setUser}) {
 
     function logOut() {
         handleClose()
-        fetch("/logout", {
+        fetch("http://localhost:4000/logout", {
           method: "DELETE",
           headers: {
               "Content-Type": "application/json",

@@ -115,7 +115,7 @@ def get_friends(user_id):
             "status": "FAILURE",
             "error_message": "Invalid user id.",
         }
-
+    print(maybe_user.friends)
     return jsonify(maybe_user.friends.order_by(Friend.name))
 
 

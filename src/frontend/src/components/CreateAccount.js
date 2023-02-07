@@ -26,18 +26,24 @@ function CreateAccount({ setUser, hash }) {
                 password_digest: hash(password),
               }),
             };
-            fetch("http://localhost:5000/create_account", payload)
+            fetch("http://localhost:4000/create_account", payload)
             .then((r) => {
               if (r.ok) {
-                  r.json().then((userResp) => setUser(userResp));
+                  r.json().then((userResp) => {
+                    if (userResp.status === "SUCCESS") {
+                      setUser(userResp)
+                    } else {
+                      console.log(userResp)
+                    }
+                    });
               } else {
                   r.json().then((err) => console.log(err.errors)); //finish error handling
               }
             });
-          } else {
-            resetPasswordFields();
-            setPasswordMatch(false);
-          }
+        } else {
+          resetPasswordFields();
+          setPasswordMatch(false);
+        }
     }
 
     function resetPasswordFields() {
@@ -99,7 +105,7 @@ function CreateAccount({ setUser, hash }) {
             </FormControl>
             </Box>
         </div>
-      );
+    );
 }
 
 export default CreateAccount;

@@ -21,7 +21,7 @@ function Login({ setUser, hash }) {
             },
             body: JSON.stringify({ email: email, password_digest: hash(password) })
         };
-        fetch("http://localhost:5000/login", postObj)
+        fetch("http://localhost:4000/login", postObj)
         .then((r) => {
             setIsLoading(false);
             console.log(r);
