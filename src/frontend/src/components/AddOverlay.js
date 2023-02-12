@@ -67,6 +67,7 @@ function AddOverlay({ addToggle, setAddToggle, user }) {
     console.log(response.status);
     if (response.ok) {
       console.log(response.json());
+      setAddToggle(false);
     }
   }
 
