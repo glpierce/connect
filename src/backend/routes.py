@@ -137,7 +137,7 @@ def add_friend():
         "birthdate": maybe_new_friend.birthdate,
         "frequency": maybe_new_friend.frequency,
         "last_messaged": maybe_new_friend.last_messaged,
-    }, 200
+    }, 201
 
 
 @app.route("/get_friends/<int:user_id>")
