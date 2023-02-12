@@ -48,7 +48,7 @@ def create_account():
     email = data["email"]
     maybe_existing_user = db.session.query(User).filter(User.email == email).first()
     if maybe_existing_user is not None:
-        return {"status": "FAILURE", "error_message": "User email already exists."}
+        return {"status": "EMAIL_IN_USE", "error_message": "Email already in use"}, 418
 
     user = get_user_from_data(data)
 
@@ -61,7 +61,7 @@ def create_account():
         "email": user.email,
         "first_name": user.first_name,
         "last_name": user.last_name
-    }
+    }, 201
 
 
 @app.route("/login", methods=["POST"])

@@ -9,11 +9,13 @@ function CreateAccount({ setUser, hash }) {
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [passwordMatch, setPasswordMatch] = useState(true);
-    const [emailInUse, setEmailInUse] = useState(false);
+    const [emailInUse, setEmailInUse] = useState(null);
 
     function handleSubmit(e) {
         e.preventDefault();
+        setEmailInUse(null)
         if (password === passwordConfirmation) {
+            setPasswordMatch(true)
             const payload = {
               method: "POST",
               headers: {
@@ -30,25 +32,47 @@ function CreateAccount({ setUser, hash }) {
             .then((r) => {
               if (r.ok) {
                   r.json().then((userResp) => {
-                    if (userResp.status === "SUCCESS") {
+                      console.log("SUCCESS", userResp)
                       setUser(userResp)
-                    } else {
-                      console.log(userResp)
-                    }
                     });
               } else {
-                  r.json().then((err) => console.log(err.errors)); //finish error handling
+                  r.json().then((error) => handleError(error));
               }
             });
         } else {
-          resetPasswordFields();
-          setPasswordMatch(false);
+          handleError({status: "PASSWORD_MATCH"})
         }
     }
 
+    function handleError(error) {
+      console.log(error)
+      switch(error.status) {
+        case "EMAIL_IN_USE":
+          resetPasswordFields()
+          setEmailInUse(error.error_message);
+          break;
+        case "PASSWORD_MATCH":
+          resetPasswordFields()
+          setPasswordMatch(false);
+          break;
+        default:
+          resetForm()
+          break;
+      };
+    };
+
+    function resetForm() {
+      setFirstName("")
+      setLastName("")
+      setEmail("")
+      resetPasswordFields()
+      setEmailInUse(null)
+      setPasswordMatch(true)
+    }
+
     function resetPasswordFields() {
-        setPassword("");
-        setPasswordConfirmation("");
+      setPassword("");
+      setPasswordConfirmation("");
     }
 
 
@@ -62,44 +86,47 @@ function CreateAccount({ setUser, hash }) {
             >
             <FormControl>
                 <TextField
-                required
-                id="first-name"
-                label="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  id="first-name"
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
                 <TextField
-                required
-                id="last-name"
-                label="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                  required
+                  id="last-name"
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                {!!emailInUse ? <p style={{color: "error"}}>{emailInUse}</p> : null}
+                <TextField
+                  sx={!!emailInUse ? {borderColor: "error"} : {}}
+                  required
+                  id="user-email"
+                  label="E-mail"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {passwordMatch ? <></> : <p style={{color: "red"}}>Passwords must match</p>}
+                <TextField
+                  sx={!passwordMatch ? {borderColor: "error"} : {}}
+                  required
+                  id="password"
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <TextField
-                required
-                id="user-email"
-                label="E-mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                  sx={!passwordMatch ? {borderColor: "error.main"} : {}}
+                  required
+                  id="confirm"
+                  label="Confirm Password"
+                  type="password"
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
                 />
-                {emailInUse ? <p>There is already an account associated with this email</p> : <></>}
-                <TextField
-                required
-                id="password"
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                />
-                <TextField
-                required
-                id="confirm"
-                label="Confirm Password"
-                type="password"
-                value={passwordConfirmation}
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                />
-                {passwordMatch ? <></> : <p>Passwords must match</p>}
                 <br />
                 <Button variant="outlined" style={{color: "#083C5A", borderColor: "#083C5A"}} onClick={handleSubmit}>Sign Up!</Button>
             </FormControl>
