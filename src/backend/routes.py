@@ -1,11 +1,14 @@
 from flask import current_app as app
 from flask import jsonify, request
 
+from datetime import datetime
 from .models import User, Friend, db
 
 
 # hello! only routes (and their helpers) should live here!
 # nothing else
+
+DATE_FORMAT = "%Y-%m-%d"
 
 @app.route("/me")
 def me():
@@ -60,7 +63,7 @@ def create_account():
         "id": user.id,
         "email": user.email,
         "first_name": user.first_name,
-        "last_name": user.last_name
+        "last_name": user.last_name,
     }, 201
 
 
@@ -95,7 +98,6 @@ def add_friend():
     # I am a dummy.
     data = request.json
 
-    print('im alive')
     user_id = data.get("id")
     maybe_existing_user = db.session.query(User).filter(User.id == user_id).first()
     if maybe_existing_user is None:
@@ -105,9 +107,24 @@ def add_friend():
         }
 
     new_friend_name = data.get("name")
-    maybe_birthdate, maybe_frequency = data.get("birthdate"), data.get('frequency')
+    maybe_birthdate, maybe_frequency = data.get("birthdate"), data.get("frequency")
 
-    maybe_new_friend = Friend(name=data["name"], user_id=user_id, user=maybe_existing_user)
+    if maybe_birthdate is not None:
+        try:
+            maybe_birthdate = datetime.strptime(maybe_birthdate, DATE_FORMAT)
+        except ValueError:
+            return {
+                "status": "FAILURE",
+                "error_message": "Invalid date format.",
+            }
+
+    maybe_new_friend = Friend(
+        name=data["name"],
+        user_id=user_id,
+        user=maybe_existing_user,
+        birthdate=maybe_birthdate,
+        frequency=maybe_frequency,
+    )
 
     db.session.add(maybe_new_friend)
     db.session.commit()
@@ -130,7 +147,6 @@ def get_friends(user_id):
             "status": "FAILURE",
             "error_message": "Invalid user id.",
         }
-    print(maybe_user.friends)
     return jsonify(maybe_user.friends.order_by(Friend.name))
 
 
