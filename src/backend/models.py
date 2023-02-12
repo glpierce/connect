@@ -6,6 +6,7 @@ from . import db
 
 # the place where all of our models schemas reside
 
+
 class User(db.Model):
     __tablename__ = "users"
 
@@ -30,11 +31,20 @@ class Friend(db.Model):
 
     # add new fields
     name = Column(String(100), nullable=False)
-    birthdate = Column(DateTime) 
+    birthdate = Column(DateTime)
     last_messaged = Column(DateTime)
     frequency = Column(Integer)
 
     def __repr__(self):
         return "<UserFriend user_id={} friend_id={}>".format(
-            self.user_id, self.friend_id
+            self.user_id, self.id
         )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "birthdate": self.birthdate.strftime("%Y-%m-%d") if self.birthdate is not None else '',
+            "frequency": self.frequency,
+            "last_messaged": self.last_messaged.strftime("%Y-%m-%d") if self.last_messaged is not None else '',
+        }

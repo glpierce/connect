@@ -1,6 +1,7 @@
 from flask import current_app as app
 from flask import jsonify, request
 
+import json
 from datetime import datetime
 from .models import User, Friend, db
 
@@ -9,6 +10,7 @@ from .models import User, Friend, db
 # nothing else
 
 DATE_FORMAT = "%Y-%m-%d"
+
 
 @app.route("/me")
 def me():
@@ -150,11 +152,29 @@ def get_friends(user_id):
     return jsonify(maybe_user.friends.order_by(Friend.name))
 
 
-@app.route("/get_friends", methods=["POST"])
+@app.route("/remove_friend", methods=["POST"])
 def remove_friend():
     data = request.json
+
+    user_id = data.get("id")
+    friend_id = data.get("friend_id")
+    maybe_friend = db.session.query(Friend).filter_by(id=friend_id).first()
+    if maybe_friend is None:
+        return {
+            "status": "FAILURE",
+            "error_message": "Invalid friend id.",
+        }
+    user = maybe_friend.user
+    user.friends.remove(maybe_friend)
+    db.session.delete(maybe_friend)
+    db.session.commit()
+
     # check if friend exists
-    return {"id": id}
+
+    return {
+        "id": user_id,
+        "friends": json.dumps([friend.to_dict() for friend in user.friends]),
+    }, 200
 
 
 @app.route("/update_friend", methods=["POST"])
