@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { ThemeProvider } from "@mui/material";
 import { textFieldTheme } from "../themes/theme";
 
-function AddOverlay({ addToggle, setAddToggle, user }) {
+function AddOverlay({ addToggle, setAddToggle, user, toggleFriendReload }) {
   const [name, setName] = useState("");
   const [birthday, setBirthday] = useState(null);
   const [lastContacted, setLastContacted] = useState(null);
@@ -68,6 +68,7 @@ function AddOverlay({ addToggle, setAddToggle, user }) {
     if (response.ok) {
       console.log(response.json());
       setAddToggle(false);
+      toggleFriendReload();
     }
   }
 

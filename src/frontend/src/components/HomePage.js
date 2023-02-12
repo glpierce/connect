@@ -11,10 +11,11 @@ function HomePage({ user, windowDimensions }) {
   const [displayFriends, setDisplayFriends] = useState(friends);
   const [searchQuery, setSearchQuery] = useState("");
   const [addToggle, setAddToggle] = useState(false);
+  const [friendToggle, setFriendToggle] = useState(false);
 
   useEffect(() => {
     getFriends();
-  }, []);
+  }, [friendToggle]);
 
   async function getFriends() {
     const response = await fetch(
@@ -25,6 +26,10 @@ function HomePage({ user, windowDimensions }) {
     setFriends(data);
     setDisplayFriends(data);
     setPDFriends(data.filter((friend) => friend.past_due));
+  }
+
+  function toggleFriendReload() {
+    setFriendToggle(!friendToggle);
   }
 
   useEffect(() => {
@@ -81,6 +86,7 @@ function HomePage({ user, windowDimensions }) {
         addToggle={addToggle}
         setAddToggle={setAddToggle}
         user={user}
+        toggleFriendReload={toggleFriendReload}
       />
     </>
   );
