@@ -4,68 +4,89 @@ import FriendsDisplay from "./FriendsDisplay";
 import AddOverlay from "./AddOverlay";
 
 function HomePage({ user, windowDimensions }) {
-    const [friends, setFriends] = useState([]);
-    const [pdFriends, setPDFriends] = useState(friends.filter(friend => friend.past_due));
-    const [displayFriends, setDisplayFriends] = useState(friends)
-    const [searchQuery, setSearchQuery] = useState("")
-    const [addToggle, setAddToggle] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [pdFriends, setPDFriends] = useState(
+    friends.filter((friend) => friend.past_due)
+  );
+  const [displayFriends, setDisplayFriends] = useState(friends);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [addToggle, setAddToggle] = useState(false);
 
-    useEffect(() => {
-        getFriends();
-    }, [])
+  useEffect(() => {
+    getFriends();
+  }, []);
 
-    function getFriends() {
-        fetch(`http://localhost:4000/get_friends/${user.id}`)
-        .then(r => r.json())
-        .then(data => {
-            console.log(data);
-            setFriends(data);
-            setDisplayFriends(data);
-            setPDFriends(data.filter(friend => friend.past_due));
-        })
+  function getFriends() {
+    fetch(`http://localhost:4000/get_friends/${user.id}`)
+      .then((r) => r.json())
+      .then((data) => {
+        console.log(data);
+        setFriends(data);
+        setDisplayFriends(data);
+        setPDFriends(data.filter((friend) => friend.past_due));
+      });
+  }
+
+  useEffect(() => {
+    if (!searchQuery) {
+      setDisplayFriends(friends);
+    } else {
+      setDisplayFriends(
+        friends.filter((friend) =>
+          friend.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
     }
+  }, [searchQuery, friends]);
 
-    useEffect(() => {
-        if (!searchQuery) {
-            setDisplayFriends(friends);
-        } else {
-            setDisplayFriends(friends.filter(friend => friend.name.toLowerCase().includes(searchQuery.toLowerCase())))
-        }
-    }, [searchQuery, friends])
-
-    return(
-        <>
-            <div>
-                <h1 className="pastDueHeader">Past Due</h1>
-                <div className="sectionDivider"></div>
-                {
-                    pdFriends.length ?
-                    <FriendsDisplay user={user} windowDimensions={windowDimensions} friends={pdFriends} display={"pastDue"} /> :
-                    <div className="noFriendsDiv">
-                        <p className="noFriendsLabel">No past due friends.</p>
-                    </div>
-                }
-            </div>
-            <div>
-                <FriendsHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} setAddToggle={setAddToggle} />
-                <div className="sectionDivider"></div>
-                {
-                    friends.length ?
-                    <FriendsDisplay user={user} windowDimensions={windowDimensions} friends={displayFriends} display={"pastDue"} /> :
-                    <div className="noFriendsDiv">
-                        <p className="noFriendsLabel">No friends yet.</p>
-                    </div>
-                }
-            </div>
-            <AddOverlay addToggle={addToggle} setAddToggle={setAddToggle} />
-        </>
-    );
+  return (
+    <>
+      <div>
+        <h1 className="pastDueHeader">Past Due</h1>
+        <div className="sectionDivider"></div>
+        {pdFriends.length ? (
+          <FriendsDisplay
+            user={user}
+            windowDimensions={windowDimensions}
+            friends={pdFriends}
+            display={"pastDue"}
+          />
+        ) : (
+          <div className="noFriendsDiv">
+            <p className="noFriendsLabel">No past due friends.</p>
+          </div>
+        )}
+      </div>
+      <div>
+        <FriendsHeader
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          setAddToggle={setAddToggle}
+        />
+        <div className="sectionDivider"></div>
+        {friends.length ? (
+          <FriendsDisplay
+            user={user}
+            windowDimensions={windowDimensions}
+            friends={displayFriends}
+            display={"pastDue"}
+          />
+        ) : (
+          <div className="noFriendsDiv">
+            <p className="noFriendsLabel">No friends yet.</p>
+          </div>
+        )}
+      </div>
+      <AddOverlay
+        addToggle={addToggle}
+        setAddToggle={setAddToggle}
+        user={user}
+      />
+    </>
+  );
 }
 
 export default HomePage;
-
-
-
 
 // [
 //     {
@@ -94,7 +115,7 @@ export default HomePage;
 //         last_messaged: new Date(),
 //         frequency: 30,
 //         past_due: false
-//     }, 
+//     },
 //     {
 //         id: 4,
 //         user_id: 1,
