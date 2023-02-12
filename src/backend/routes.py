@@ -18,6 +18,15 @@ def me():
     pass
 
 
+def is_overdue(last_messaged, frequency: int):
+    if frequency is None:
+        return False
+    if last_messaged is None:
+        return True
+    current_time = datetime.now()
+    delta = current_time - last_messaged
+    return delta.days > frequency
+
 def get_new_user_from_data(data):
     user = {}
     # TODO(yousef): fill in.

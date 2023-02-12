@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+
+import datetime
 from . import db
 
 
@@ -40,6 +42,15 @@ class Friend(db.Model):
             self.user_id, self.id
         )
 
+    def past_due(self):
+        if self.frequency is None:
+            return False
+        if self.last_messaged is None:
+            return True
+        current_time = datetime.now()
+        delta = current_time - self.last_messaged
+        return delta.days > self.frequency
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -47,4 +58,5 @@ class Friend(db.Model):
             "birthdate": self.birthdate.strftime("%Y-%m-%d") if self.birthdate is not None else '',
             "frequency": self.frequency,
             "last_messaged": self.last_messaged.strftime("%Y-%m-%d") if self.last_messaged is not None else '',
+            "past_due": self.past_due()
         }
