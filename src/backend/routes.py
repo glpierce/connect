@@ -97,7 +97,6 @@ def login():
 # Accessing/changing friend data.
 @app.route("/add_friend", methods=["POST"])
 def add_friend():
-    # I am a dummy.
     data = request.json
 
     user_id = data.get("id")
