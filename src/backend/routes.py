@@ -13,7 +13,7 @@ def me():
     pass
 
 
-def get_user_from_data(data):
+def get_new_user_from_data(data):
     user = {}
     # TODO(yousef): fill in.
     first_name = data["first_name"]
@@ -50,7 +50,7 @@ def create_account():
     if maybe_existing_user is not None:
         return {"status": "EMAIL_IN_USE", "error_message": "Email already in use"}, 418
 
-    user = get_user_from_data(data)
+    user = get_new_user_from_data(data)
 
     db.session.add(user)
     db.session.commit()
@@ -92,19 +92,34 @@ def login():
 # Accessing/changing friend data.
 @app.route("/add_friend", methods=["POST"])
 def add_friend():
+    # I am a dummy.
     data = request.json
 
-    maybe_new_friend = Friend(name=data["name"], user=data["user"])
+    print('im alive')
+    user_id = data.get("id")
+    maybe_existing_user = db.session.query(User).filter(User.id == user_id).first()
+    if maybe_existing_user is None:
+        return {
+            "status": "FAILURE",
+            "error_message": "Invalid user id.",
+        }
 
-    return (
-        {
-            "id": id,
-            "name": "New Friend",
-            "frequency": "Daily",
-            "lastMessaged": "temp",
-            "birthday": "today",
-        },
-    )
+    new_friend_name = data.get("name")
+    maybe_birthdate, maybe_frequency = data.get("birthdate"), data.get('frequency')
+
+    maybe_new_friend = Friend(name=data["name"], user_id=user_id, user=maybe_existing_user)
+
+    db.session.add(maybe_new_friend)
+    db.session.commit()
+
+    return {
+        "status": "SUCCESS",
+        "id": maybe_new_friend.id,
+        "name": maybe_new_friend.name,
+        "birthdate": maybe_new_friend.birthdate,
+        "frequency": maybe_new_friend.frequency,
+        "last_messaged": maybe_new_friend.last_messaged,
+    }, 200
 
 
 @app.route("/get_friends/<int:user_id>")
@@ -136,5 +151,5 @@ def update_friend():
             "error_message": "Username or password is incorrect.",
         }
 
-    user = get_user_from_data(data)
+    user = get_new_user_from_data(data)
     return {"status": "SUCCESS", "id": user.id, "email": user.email, "name": user.name}
