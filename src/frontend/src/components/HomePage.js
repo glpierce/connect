@@ -16,15 +16,15 @@ function HomePage({ user, windowDimensions }) {
     getFriends();
   }, []);
 
-  function getFriends() {
-    fetch(`http://localhost:4000/get_friends/${user.id}`)
-      .then((r) => r.json())
-      .then((data) => {
-        console.log(data);
-        setFriends(data);
-        setDisplayFriends(data);
-        setPDFriends(data.filter((friend) => friend.past_due));
-      });
+  async function getFriends() {
+    const response = await fetch(
+      `http://localhost:4000/get_friends/${user.id}`
+    );
+    const data = await response.json();
+    console.log(data);
+    setFriends(data);
+    setDisplayFriends(data);
+    setPDFriends(data.filter((friend) => friend.past_due));
   }
 
   useEffect(() => {
