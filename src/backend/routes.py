@@ -99,13 +99,13 @@ def login():
 def add_friend():
     data = request.json
 
-    user_id = data.get("id")
+    user_id = data.get("user_id")
     maybe_existing_user = db.session.query(User).filter(User.id == user_id).first()
     if maybe_existing_user is None:
         return {
             "status": "FAILURE",
             "error_message": "Invalid user id.",
-        }
+        }, 415
 
     new_friend_name = data.get("name")
     maybe_birthdate, maybe_frequency = data.get("birthdate"), data.get("frequency")
@@ -117,7 +117,7 @@ def add_friend():
             return {
                 "status": "FAILURE",
                 "error_message": "Invalid date format.",
-            }
+            }, 415
 
     maybe_new_friend = Friend(
         name=data["name"],
@@ -147,8 +147,8 @@ def get_friends(user_id):
         return {
             "status": "FAILURE",
             "error_message": "Invalid user id.",
-        }
-    return jsonify(maybe_user.friends.order_by(Friend.name))
+        }, 415
+    return jsonify([friend.to_dict() for friend in maybe_user.friends])
 
 
 @app.route("/remove_friend", methods=["POST"])

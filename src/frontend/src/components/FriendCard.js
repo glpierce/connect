@@ -51,7 +51,7 @@ function FriendCard({ friend }) {
                     </div>
                     <div className="dataValuesContainer">
                         <p>{friend.birthdate}</p>
-                        <p>{getFormattedDate(friend.last_messaged)}</p>
+                        <p>{friend.last_messaged}</p>
                         <p>{getFrequencyLabel(friend.frequency)}</p>
                     </div>
                 </div>
