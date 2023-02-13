@@ -14,8 +14,17 @@ function AddOverlay({ addToggle, setAddToggle, user, toggleFriendReload }) {
   const [name, setName] = useState("");
   const [birthday, setBirthday] = useState(null);
   const [lastContacted, setLastContacted] = useState(null);
-  const [frequency, setFrequency] = useState(null);
+  const [frequency, setFrequency] = useState("");
   const [frequencyUnit, setFrequencyUnit] = useState("days");
+
+  function closeOverlay() {
+    setName("");
+    setBirthday(null);
+    setLastContacted(null);
+    setFrequency("");
+    setFrequencyUnit("days");
+    setAddToggle(false);
+  }
 
   function handleBirthday(value) {
     setBirthday(value);
@@ -26,25 +35,39 @@ function AddOverlay({ addToggle, setAddToggle, user, toggleFriendReload }) {
   }
 
   function handleFrequency(value) {
+    console.log(value);
     if (/^[0-9]*$/.test(value)) {
-      if (value === "") {
-        setFrequency(null);
-      } else {
-        setFrequency(parseInt(value));
-      }
+      setFrequency(value);
     }
   }
 
   function calculateFrequency() {
+    if (frequency === "") {
+      return null;
+    }
+    const frequencyInt = parseInt(frequency);
     switch (frequencyUnit) {
       case "years":
-        return frequency * 365;
+        return frequencyInt * 365;
       case "months":
-        return frequency * 30;
+        return frequencyInt * 30;
       case "weeks":
-        return frequency * 7;
+        return frequencyInt * 7;
       default:
-        return frequency;
+        return frequencyInt;
+    }
+  }
+
+  function formatDate(value) {
+    if (value === null) {
+      return null;
+    } else {
+      const dateTime = new Date(value);
+      const result = `${dateTime.getFullYear()}-${
+        dateTime.getMonth() + 1
+      }-${dateTime.getDate()}`;
+      console.log("Date", result);
+      return result;
     }
   }
 
@@ -57,17 +80,17 @@ function AddOverlay({ addToggle, setAddToggle, user, toggleFriendReload }) {
       body: JSON.stringify({
         user_id: user.id,
         name: name,
-        birthday: birthday,
-        lastContacted: lastContacted,
+        birthdate: formatDate(birthday),
+        last_messaged: formatDate(lastContacted),
         frequency: calculateFrequency(),
       }),
     };
-    console.log(request);
     const response = await fetch("http://localhost:4000/add_friend", request);
     console.log(response.status);
     if (response.ok) {
-      console.log(response.json());
-      setAddToggle(false);
+      const data = await response.json();
+      console.log(data);
+      closeOverlay();
       toggleFriendReload();
     }
   }
@@ -112,7 +135,7 @@ function AddOverlay({ addToggle, setAddToggle, user, toggleFriendReload }) {
     <Overlay
       configs={{ animate: true }}
       isOpen={addToggle}
-      closeOverlay={() => setAddToggle(false)}
+      closeOverlay={() => closeOverlay()}
     >
       <div className="overlayContainer">
         <h2 className="friendName">New Friend</h2>

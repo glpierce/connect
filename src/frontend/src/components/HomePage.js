@@ -5,9 +5,7 @@ import AddOverlay from "./AddOverlay";
 
 function HomePage({ user, windowDimensions }) {
   const [friends, setFriends] = useState([]);
-  const [pdFriends, setPDFriends] = useState(
-    friends.filter((friend) => friend.past_due)
-  );
+  const [pdFriends, setPDFriends] = useState([]);
   const [displayFriends, setDisplayFriends] = useState(friends);
   const [searchQuery, setSearchQuery] = useState("");
   const [addToggle, setAddToggle] = useState(false);
@@ -18,6 +16,7 @@ function HomePage({ user, windowDimensions }) {
   }, [friendToggle]);
 
   async function getFriends() {
+    console.log("Getting Friends!");
     const response = await fetch(
       `http://localhost:4000/get_friends/${user.id}`
     );
@@ -25,7 +24,7 @@ function HomePage({ user, windowDimensions }) {
     console.log(data);
     setFriends(data);
     setDisplayFriends(data);
-    setPDFriends(data.filter((friend) => friend.past_due));
+    setPDFriends(data.filter((friend) => !!friend.past_due));
   }
 
   function toggleFriendReload() {

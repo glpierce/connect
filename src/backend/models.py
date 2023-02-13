@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-import datetime
+from datetime import date
 from . import db
 
 
@@ -33,8 +33,8 @@ class Friend(db.Model):
 
     # add new fields
     name = Column(String(100), nullable=False)
-    birthdate = Column(DateTime)
-    last_messaged = Column(DateTime)
+    birthdate = Column(Date)
+    last_messaged = Column(Date)
     frequency = Column(Integer)
 
     def __repr__(self):
@@ -47,9 +47,9 @@ class Friend(db.Model):
             return False
         if self.last_messaged is None:
             return True
-        current_time = datetime.now()
-        delta = current_time - self.last_messaged
-        return delta.days > self.frequency
+        current_date = date.today()
+        delta = current_date - self.last_messaged
+        return delta.days >= self.frequency
 
     def to_dict(self):
         return {

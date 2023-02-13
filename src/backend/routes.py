@@ -2,7 +2,7 @@ from flask import current_app as app
 from flask import jsonify, request
 
 import json
-from datetime import datetime
+from datetime import date
 from .models import User, Friend, db
 
 
@@ -23,9 +23,9 @@ def is_overdue(last_messaged, frequency: int):
         return False
     if last_messaged is None:
         return True
-    current_time = datetime.now()
+    current_time = date.today()
     delta = current_time - last_messaged
-    return delta.days > frequency
+    return delta.days >= frequency
 
 def get_new_user_from_data(data):
     user = {}
@@ -118,10 +118,22 @@ def add_friend():
 
     new_friend_name = data.get("name")
     maybe_birthdate, maybe_frequency = data.get("birthdate"), data.get("frequency")
+    maybe_last_messaged = data.get("last_messaged")
 
     if maybe_birthdate is not None:
         try:
-            maybe_birthdate = datetime.strptime(maybe_birthdate, DATE_FORMAT)
+            splitDate = maybe_birthdate.split("-")
+            maybe_birthdate = date(int(splitDate[0]), int(splitDate[1]), int(splitDate[2]))
+        except ValueError:
+            return {
+                "status": "FAILURE",
+                "error_message": "Invalid date format.",
+            }, 415
+
+    if maybe_last_messaged is not None:
+        try:
+            splitDate = maybe_last_messaged.split("-")
+            maybe_last_messaged = date(int(splitDate[0]), int(splitDate[1]), int(splitDate[2]))
         except ValueError:
             return {
                 "status": "FAILURE",
@@ -133,6 +145,7 @@ def add_friend():
         user_id=user_id,
         user=maybe_existing_user,
         birthdate=maybe_birthdate,
+        last_messaged = maybe_last_messaged,
         frequency=maybe_frequency,
     )
 
@@ -149,7 +162,7 @@ def add_friend():
     }, 201
 
 
-@app.route("/get_friends/<int:user_id>")
+@app.route("/get_friends/<int:user_id>", methods=["GET"])
 def get_friends(user_id):
     maybe_user = db.session.query(User).filter_by(id=user_id).first()
     if maybe_user is None:
